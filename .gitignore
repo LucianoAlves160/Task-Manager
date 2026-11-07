@@ -1,0 +1,22 @@
+# Dependências e caches
+node_modules/
+.npm/
+
+# Variáveis locais e segredos
+.env
+.env.*
+!.env.example
+
+# Artefatos de editor e sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Saídas temporárias
+coverage/
+dist/
+build/
+*.log
