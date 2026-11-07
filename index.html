@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f5f0">
+    <meta name="description" content="Organize tarefas do dia com simplicidade e privacidade.">
+    <title>Feito — Mini-gerenciador de tarefas</title>
+    <link rel="stylesheet" href="src/style.css">
+    <script type="module" src="src/app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Feito, página inicial">
+          <span class="brand-mark" aria-hidden="true">✓</span>
+          <span>feito<span class="brand-period">.</span></span>
+        </a>
+        <p class="topbar-note">Um passo de cada vez.</p>
+      </header>
+
+      <main class="workspace">
+        <section class="main-column" aria-labelledby="page-title">
+          <div class="page-heading">
+            <p class="eyebrow">SEU ESPAÇO DE FOCO</p>
+            <h1 id="page-title">Tire da cabeça.<br><span>Coloque em feito.</span></h1>
+            <p class="intro-copy">Um lugar simples para organizar o que precisa acontecer — sem ruído, sem complicação.</p>
+          </div>
+
+          <section class="panel composer" aria-labelledby="new-task-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">COMECE POR AQUI</p>
+                <h2 id="new-task-title">Nova tarefa</h2>
+              </div>
+              <span class="step-mark" aria-hidden="true">01</span>
+            </div>
+            <form id="task-form" novalidate>
+              <label class="field-label" for="task-title">O que você precisa fazer? <span aria-hidden="true">*</span></label>
+              <input id="task-title" name="title" type="text" maxlength="120" placeholder="Ex.: Revisar o relatório da semana" required autocomplete="off">
+              <p class="field-hint">Até 120 caracteres. Um título claro ajuda a começar.</p>
+
+              <label class="field-label" for="task-description">Detalhes <span class="optional">opcional</span></label>
+              <textarea id="task-description" name="description" rows="2" maxlength="500" placeholder="Anote um contexto ou próximo passo"></textarea>
+
+              <div class="form-row">
+                <div class="field-group">
+                  <label class="field-label" for="task-priority">Prioridade</label>
+                  <select id="task-priority" name="priority">
+                    <option value="low">Baixa</option>
+                    <option value="medium" selected>Média</option>
+                    <option value="high">Alta</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="field-label" for="task-due-date">Prazo <span class="optional">opcional</span></label>
+                  <input id="task-due-date" name="dueDate" type="date">
+                </div>
+              </div>
+              <div class="form-footer">
+                <p class="privacy-note"><span aria-hidden="true">◉</span> Seus dados ficam neste navegador.</p>
+                <button class="button button-primary" type="submit">Adicionar tarefa <span aria-hidden="true">↗</span></button>
+              </div>
+              <p id="form-error" class="form-error" role="alert" hidden></p>
+            </form>
+          </section>
+
+          <section class="task-area" aria-labelledby="tasks-heading">
+            <div class="section-heading list-heading">
+              <div>
+                <p class="eyebrow">VISÃO GERAL</p>
+                <h2 id="tasks-heading">Suas tarefas</h2>
+              </div>
+              <span id="visible-count" class="count-pill" aria-live="polite">0 tarefas</span>
+            </div>
+
+            <div class="toolbar">
+              <label class="search-box" for="task-search">
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <span class="visually-hidden">Buscar tarefas</span>
+                <input id="task-search" type="search" placeholder="Buscar tarefa…" autocomplete="off">
+              </label>
+              <div class="filter-group" role="group" aria-label="Filtrar tarefas por situação">
+                <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">Todas</button>
+                <button class="filter-button" type="button" data-filter="pending" aria-pressed="false">A fazer</button>
+                <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">Concluídas</button>
+              </div>
+            </div>
+
+            <p id="status-message" class="visually-hidden" role="status" aria-live="polite"></p>
+            <ul id="task-list" class="task-list" aria-label="Lista de tarefas"></ul>
+            <div id="empty-state" class="empty-state" hidden>
+              <span class="empty-illustration" aria-hidden="true">✓</span>
+              <h3 id="empty-title">Tudo começa com uma tarefa.</h3>
+              <p id="empty-copy">Adicione a primeira tarefa acima e libere espaço na cabeça.</p>
+            </div>
+          </section>
+        </section>
+
+        <aside class="side-column" aria-label="Resumo e informações">
+          <section class="panel progress-panel" aria-labelledby="progress-title">
+            <p class="eyebrow">SEU RITMO</p>
+            <h2 id="progress-title">Pequenos passos<br>também contam.</h2>
+            <p class="panel-copy">Acompanhe o que já avançou. Não precisa fazer tudo de uma vez.</p>
+            <div class="stats-list">
+              <div class="stat-row"><span>Em aberto</span><strong id="pending-count">0</strong></div>
+              <div class="stat-row"><span>Concluídas</span><strong id="completed-count">0</strong></div>
+              <div class="stat-row stat-total"><span>Total registrado</span><strong id="total-count">0</strong></div>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Percentual de tarefas concluídas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+              <span id="progress-fill"></span>
+            </div>
+            <p id="progress-caption" class="progress-caption">Seu progresso aparece aqui.</p>
+          </section>
+
+          <section class="privacy-card">
+            <span class="privacy-icon" aria-hidden="true">⌂</span>
+            <h2>Seu espaço, suas regras.</h2>
+            <p>As tarefas são salvas localmente neste navegador. Nenhuma conta ou servidor é necessário.</p>
+          </section>
+          <p class="version-note">FEITO COM INTENÇÃO <span aria-hidden="true">·</span> V0.1.0</p>
+        </aside>
+      </main>
+      <footer class="site-footer"><span>Feito.</span> Um mini-gerenciador de tarefas para focar no próximo passo.</footer>
+    </div>
+
+    <dialog id="edit-dialog" class="edit-dialog" aria-labelledby="edit-dialog-title">
+      <form id="edit-form">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ATUALIZE SEU PLANO</p>
+            <h2 id="edit-dialog-title">Editar tarefa</h2>
+          </div>
+          <button id="close-edit" class="icon-button" type="button" aria-label="Fechar edição">×</button>
+        </div>
+        <input id="edit-task-id" name="id" type="hidden">
+        <label class="field-label" for="edit-title">Título <span aria-hidden="true">*</span></label>
+        <input id="edit-title" name="title" type="text" maxlength="120" required>
+        <label class="field-label" for="edit-description">Detalhes <span class="optional">opcional</span></label>
+        <textarea id="edit-description" name="description" rows="3" maxlength="500"></textarea>
+        <div class="form-row">
+          <div class="field-group">
+            <label class="field-label" for="edit-priority">Prioridade</label>
+            <select id="edit-priority" name="priority">
+              <option value="low">Baixa</option><option value="medium">Média</option><option value="high">Alta</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="edit-due-date">Prazo <span class="optional">opcional</span></label>
+            <input id="edit-due-date" name="dueDate" type="date">
+          </div>
+        </div>
+        <p id="edit-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button id="cancel-edit" class="button button-secondary" type="button">Cancelar</button>
+          <button class="button button-primary" type="submit">Salvar alterações</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
